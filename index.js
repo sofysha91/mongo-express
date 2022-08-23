@@ -124,7 +124,6 @@ app.get("/koders", async (request, response) => {
     try{
         //acceder a la DB -> Promesa
         const koder = await Koder.find(query);
-        console.log("koder", koder);
         response.status(200)
         response.json({
             success: true,
@@ -143,4 +142,87 @@ app.get("/koders", async (request, response) => {
             }
         });  
     }   
+});
+
+/**
+ * findByIdAndUpdate
+ * Endpoint donde le pasen id
+ * Actualizar Koder
+ */
+
+ app.put("/koders/:id", async (request, response) => {
+    const { params, body } = request;
+
+    try{
+        //acceder a la DB -> Promesa
+        const koder = await Koder.findByIdAndUpdate(params.id, body, { returnDocument: 'after'});
+        
+        response.status(200)
+        response.json({
+            success: true,
+            data: {
+                koder
+            }
+        });
+    }
+    catch(error){
+        console.log("Error", error);    
+        response.status(400);
+        response.json({
+            success: false,
+            message: {
+                error
+            }
+        });  
+    }   
+});
+
+app.patch("/koders/:id", async (request, response) => {
+    const { params } = request;
+    const { body } = request;
+    try{
+        //acceder a la DB -> Promesa
+        const koder = await Koder.findByIdAndUpdate(params.id, body);
+        
+        response.status(200)
+        response.json({
+            success: true,
+            data: {
+                koder
+            }
+        });
+    }
+    catch(error){
+        console.log("Error", error);    
+        response.status(400);
+        response.json({
+            success: false,
+            message: {
+                error
+            }
+        });  
+    }   
+});
+
+app.delete("/koders/:id", async (request, response) => {
+    const { params } = request;
+
+    try{
+        const koder = await Koder.findByIdAndDelete(params.id);
+        response.status(200)
+        response.json({
+            success: true,
+            message: "El koder fue eliminado"
+        });
+    }
+    catch(error){
+        console.log("Error", error);    
+        response.status(400);
+        response.json({
+            success: false,
+            message: {
+                error
+            }
+        });   
+    }
 });
